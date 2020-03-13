@@ -1,0 +1,9 @@
+{
+    "bd_config":{
+    "user":"postgres",
+    "host":"localhost",
+    "database":"carnaval",
+    "password":"root",
+    "port":5432    
+    }
+}
