@@ -72,7 +72,7 @@ app.post("/dentistas",(req,res) =>{
     const {nome, telefone, endereco, cro
         }= req.body;
     pool.query(
-        "INSERT INTO dentistas (nome, endereco, telefone, cro) VALUES($1, $2, $3, $4)",
+        "INSERT INTO dentistas (nome, telefone, endereco, cro) VALUES($1, $2, $3, $4)",
         [nome,telefone,endereco,cro],
         (error,results) => {
             if (error){
@@ -157,6 +157,8 @@ app.post("/pacientes",(req,res) =>{
         }
     );
 });
+
+//    INICIO DAS ROTAS DE AGENDAMENTOS
 
 app.get("/agendamentos",(req,res)=>{
     pool.query("SELECT * FROM ",(error,results)=>{
