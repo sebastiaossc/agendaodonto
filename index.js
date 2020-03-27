@@ -117,7 +117,7 @@ app.delete("/pacientes/:id",(req,res) =>{
     pool.query(
         "DELETE FROM pacientes WHERE id = $1",
         [id],
-        (error, results) => {
+        (error,results) =>{
             if(error){
                 throw error;
             }
@@ -134,7 +134,7 @@ app.put("/pacientes/:id",(req,res) =>{
     pool.query(
         "UPDATE pacientes SET nome = $2, idade = $3 WHERE  id = $1",
         [id, nome, idade],
-        (error, results) => {
+        (error,results) => {
             if(error){
                 throw error;
             }
@@ -144,11 +144,11 @@ app.put("/pacientes/:id",(req,res) =>{
 });
 
 app.post("/pacientes",(req,res) =>{
-    const{nome, idade, cpf
+    const{nome, telefone, endereco, idade, cpf, plano_saude
         }=req.body;
     pool.query(
-        "INSERT INTO pacientes (nome, idade, cpf) VALUES ($1, $2, $3 )",
-        [nome, idade, cpf],
+        "INSERT INTO pacientes (nome, telefone, endereco, idade, cpf, plano_saude) VALUES ($1, $2, $3, $4, $5, $6 )",
+        [nome, telefone, endereco, idade, cpf, plano_saude],
         (error,results) =>{
             if(error){
                 throw error;
@@ -169,7 +169,68 @@ app.get("/agendamentos",(req,res)=>{
     });
 });
 
-app.listen(3333),() =>{
-    console.log("App running on port 3333.")
-};
+app.get("/agendamentos/:id",(req,res) =>{
+    const id = parseInt(req.params.id);
+    pool.query(
+        "SELECT * FROM agendamentos WHERE id=$1",
+        [id],
+        (error,results) =>{
+            if (error){
+                throw error;
+            }
+            res.json(results.rows);
+        }
+    );
+});
 
+app.delete("/agendamentos/:id",(req,res) =>{
+    const id = parseInt(req.params.id);
+
+    pool.query(
+        "DELETE FROM agendamentos WHERE id = $1",
+        [id],
+        (error,results) =>{
+            if(error){
+                throw error;
+            }
+            res.send(`Agendamento deletaco com o id = ${id}`);
+        }
+    );
+});
+
+app.put("/agendamentos/:id",(req,res) =>{
+    const id = parseInt(req.params.id);
+    const {
+        pacientes_id, dentistas_id, data, horario, situacao, ordem
+    }=req.body;
+    pool.query(
+        "UPDATE agendamentos SET pacientes_id = $1, dentistas_id = $2, data = $3, horario = $4, situacao = $5, ordem = $6 WHERE  id = $7",
+        [pacientes_id, dentistas_id, data, horario, situacao, ordem, id],
+        (error,results) =>{
+            if(error){
+                throw error;
+            }
+            res.status(201).send(`Agendamento alterado com o id = ${id}`);
+        }
+    );
+});
+
+app.post("/agendamentos",(req,res) =>{
+    const {
+        pacientes_id, dentistas_id, data, horario, situacao, ordem
+    }=req.body;
+    pool.query(
+        "INSERT INTO agendamentos (pacientes_id, dentistas_id, data, horario, situacao, ordem) VALUES ($1, $2, $3, $4, $5, $6)",
+        [pacientes_id, dentistas_id, data, horario, situacao, ordem],
+        (error,results) =>{
+            if(error){
+                throw error;
+            }
+            res.status(201).send(`Agendamento adicionado com o id = ${results.insertID}`);
+        }
+    );
+});
+
+app.listen(3333),() =>{
+    console.log("App running on port 3333.");
+};
