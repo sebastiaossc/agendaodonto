@@ -161,7 +161,8 @@ app.post("/pacientes",(req,res) =>{
 //    INICIO DAS ROTAS DE AGENDAMENTOS
 
 app.get("/agendamentos",(req,res)=>{
-    pool.query("SELECT * FROM ",(error,results)=>{
+    pool.query("SELECT * FROM agendamentos",
+       (error,results)=>{
             if(error){
                 throw error;
             }
